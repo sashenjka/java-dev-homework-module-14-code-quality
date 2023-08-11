@@ -4,9 +4,16 @@ import java.util.Scanner;
 
 public class Game {
     private final Box box = new Box();
-    private final static Scanner scan = new Scanner(System.in);
+    private static final Scanner scan = new Scanner(System.in);
+    private static final String MESSAGE_ON_WON = "You won the game!\nCreated by Shreyas Saha. Thanks for playing!";
+    private static final String MESSAGE_ON_LOST = "You lost the game!\nCreated by Shreyas Saha. Thanks for playing!";
+    private static final String MESSAGE_ON_DRAW = "It's a draw!\nCreated by Shreyas Saha. Thanks for playing!";
 
-   private byte input() {
+    enum WINRESULT {
+        WON, LOST, DRAW, GOING;
+    }
+
+    private byte input() {
         while (true) {
             final byte input = scan.nextByte();
             if (input > 0 && input < 10) {
@@ -17,15 +24,19 @@ public class Game {
                 }
             } else
                 System.out.println("Invalid input. Enter again.");
+
+            scan.nextByte();
         }
     }
+
     private boolean playHumanAndCheckIfWin() {
         byte input = input();
         box.fillBox((byte) (input - 1), 'X');
 
         return box.checkFinalCombination('X');
     }
-    private byte doPC() {
+
+    private byte playPC() {
         while (true) {
             final byte rand = (byte) (Math.random() * (9 - 1 + 1) + 1);
             if (box.isBoxEmpty(((byte) (rand - 1)))) {
@@ -33,12 +44,14 @@ public class Game {
             }
         }
     }
+
     private boolean playPCAndCheckIfWin() {
-        byte rnd = doPC();
+        byte rnd = playPC();
         box.fillBox((byte) (rnd - 1), 'O');
         return box.checkFinalCombination('O');
 
     }
+
     private boolean checkDraw() {
         for (byte i = 0; i < 9; i++) {
             if (box.isBoxEmpty(i)) {
@@ -47,9 +60,7 @@ public class Game {
         }
         return false;
     }
-    enum WINRESULT {
-        WON, LOST, DRAW, GOING;
-    }
+
     private WINRESULT playStrategy() {
         if (playHumanAndCheckIfWin()) {
             return WINRESULT.WON;
@@ -60,6 +71,7 @@ public class Game {
         }
         return WINRESULT.GOING;
     }
+
     public void play() {
         while (true) {
             box.printBoxInfo();
@@ -72,16 +84,19 @@ public class Game {
         }
     }
     private void writeWinningMessage(final WINRESULT variant) {
-        if (WINRESULT.WON.equals(variant)) {
-            System.out.println(MESSAGE_ON_WON);
-        } else if (WINRESULT.LOST.equals(variant)) {
-            System.out.println(MESSAGE_ON_LOST);
-        } else if (WINRESULT.DRAW.equals(variant)) {
-            System.out.println(MESSAGE_ON_DRAW);
+        switch (variant) {
+            case WON:
+                System.out.println(MESSAGE_ON_WON);
+                break;
+            case LOST:
+                System.out.println(MESSAGE_ON_LOST);
+                break;
+            case DRAW:
+                System.out.println(MESSAGE_ON_DRAW);
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported variant: " + variant);
         }
     }
-    private static final String MESSAGE_ON_WON = "You won the game!\nCreated by Shreyas Saha. Thanks for playing!";
-    private static final String MESSAGE_ON_LOST = "You lost the game!\nCreated by Shreyas Saha. Thanks for playing!";
-    private static final String MESSAGE_ON_DRAW = "It's a draw!\nCreated by Shreyas Saha. Thanks for playing!";
 }
 

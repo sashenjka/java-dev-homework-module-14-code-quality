@@ -1,7 +1,7 @@
 package com.tictactoe;
 
 public class App {
-    private static Game game = new Game();
+
     private static void printStartInfo() {
         System.out.println("Enter box number to select. Enjoy!\n");
 
@@ -13,6 +13,8 @@ public class App {
     }
     public static void main(String[] args) {
         printStartInfo();
+
+        Game game = new Game();
         game.play();
     }
 }
