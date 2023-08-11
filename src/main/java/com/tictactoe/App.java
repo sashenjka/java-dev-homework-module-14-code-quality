@@ -3,6 +3,32 @@ package com.tictactoe;
 import java.util.Scanner;
 
 public class App {
+    enum WINRESULT {
+        WIN, LOST, DRAW;
+    }
+    private static void writeWinningMessage(final WINRESULT variant){
+        if (WINRESULT.WIN.equals(variant)) {
+            System.out.println("You won the game!\nCreated by Shreyas Saha. Thanks for playing!");
+        } else if (WINRESULT.LOST.equals(variant)) {
+            System.out.println("You lost the game!\nCreated by Shreyas Saha. Thanks for playing!");
+        } else if (WINRESULT.DRAW.equals(variant)) {
+            System.out.println("It's a draw!\nCreated by Shreyas Saha. Thanks for playing!");
+        }
+    }
+    private static WINRESULT winner(final int win) {
+        if (win == 1) return WINRESULT.WIN;
+        else if (win == 2) return WINRESULT.LOST;
+        else return WINRESULT.DRAW;
+    }
+    private static boolean checkFinalCombination(final char[] box, final char symbol) {
+        if ((box[0] == symbol && box[1] == symbol && box[2] == symbol) || (box[3] == symbol && box[4] == symbol && box[5] == symbol) || (box[6] == symbol && box[7] == symbol && box[8] == symbol) ||
+                (box[0] == symbol && box[3] == symbol && box[6] == symbol) || (box[1] == symbol && box[4] == symbol && box[7] == symbol) || (box[2] == symbol && box[5] == symbol && box[8] == symbol) ||
+                (box[0] == symbol && box[4] == symbol && box[8] == symbol) || (box[2] == symbol && box[4] == symbol && box[6] == symbol)) {
+            return true;
+        }
+        return false;
+    }
+
 
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
@@ -27,16 +53,9 @@ public class App {
                 boxEmpty = true;
             }
 
-            if(winner == 1){
-                System.out.println("You won the game!\nCreated by Shreyas Saha. Thanks for playing!");
-                break;
-            } else if(winner == 2){
-                System.out.println("You lost the game!\nCreated by Shreyas Saha. Thanks for playing!");
-                break;
-            } else if(winner == 3){
-                System.out.println("It's a draw!\nCreated by Shreyas Saha. Thanks for playing!");
-                break;
-            }
+            if (winner != 0) {
+                writeWinningMessage(
+                        winner(winner));
 
             while (true) {
                 input = scan.nextByte();
@@ -52,9 +71,7 @@ public class App {
                     System.out.println("Invalid input. Enter again.");
             }
 
-            if((box[0]=='X' && box[1]=='X' && box[2]=='X') || (box[3]=='X' && box[4]=='X' && box[5]=='X') || (box[6]=='X' && box[7]=='X' && box[8]=='X') ||
-               (box[0]=='X' && box[3]=='X' && box[6]=='X') || (box[1]=='X' && box[4]=='X' && box[7]=='X') || (box[2]=='X' && box[5]=='X' && box[8]=='X') ||
-               (box[0]=='X' && box[4]=='X' && box[8]=='X') || (box[2]=='X' && box[4]=='X' && box[6]=='X')){
+            if(checkFinalCombination(box, 'X')){
                    winner = 1;
                    continue;
             }
@@ -80,9 +97,7 @@ public class App {
                 }
             }
 
-            if((box[0]=='O' && box[1]=='O' && box[2]=='O') || (box[3]=='O' && box[4]=='O' && box[5]=='O') || (box[6]=='O' && box[7]=='O' && box[8]=='O') ||
-               (box[0]=='O' && box[3]=='O' && box[6]=='O') || (box[1]=='O' && box[4]=='O' && box[7]=='O') || (box[2]=='O' && box[5]=='O' && box[8]=='O') ||
-               (box[0]=='O' && box[4]=='O' && box[8]=='O') || (box[2]=='O' && box[4]=='O' && box[6]=='O')){
+            if(checkFinalCombination(box, 'O')){
                 winner = 2;
 
             }
