@@ -25,7 +25,7 @@ public class Game {
             } else
                 System.out.println("Invalid input. Enter again.");
 
-            scan.nextByte();
+            scan.close();
         }
     }
 
