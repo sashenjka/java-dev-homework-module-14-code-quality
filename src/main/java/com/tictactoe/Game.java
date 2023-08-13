@@ -1,10 +1,11 @@
 package com.tictactoe;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Game {
     private final Box box = new Box();
-    private static final Scanner scan = new Scanner(System.in);
+    static final Scanner scan = new Scanner(System.in);
     private static final String MESSAGE_ON_WON = "You won the game!\nCreated by Shreyas Saha. Thanks for playing!";
     private static final String MESSAGE_ON_LOST = "You lost the game!\nCreated by Shreyas Saha. Thanks for playing!";
     private static final String MESSAGE_ON_DRAW = "It's a draw!\nCreated by Shreyas Saha. Thanks for playing!";
@@ -15,17 +16,25 @@ public class Game {
 
     private byte input() {
         while (true) {
-            final byte input = scan.nextByte();
-            if (input > 0 && input < 10) {
-                if (box.isBoxEmpty((byte) (input - 1)))
-                    System.out.println("That one is already in use. Enter another.");
-                else {
-                    return input;
-                }
-            } else
-                System.out.println("Invalid input. Enter again.");
+            try {
+                System.out.print("Enter a number (1-9): ");
+                final byte input = scan.nextByte();
 
-            scan.close();
+                if (input >= 1 && input <= 9) {
+                    if (box.isBoxEmpty((byte) (input - 1))) {
+                        System.out.println("That one is already in use. Enter another.");
+                    } else {
+                        return input;
+                    }
+                } else {
+                    throw new IllegalArgumentException("Invalid input. Enter again.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Enter again.");
+                scan.next(); // Переміщуємось до наступного вводу
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
@@ -36,7 +45,7 @@ public class Game {
         return box.checkFinalCombination('X');
     }
 
-    private byte playPC() {
+    private byte generateComputerMove() {
         while (true) {
             final byte rand = (byte) (Math.random() * (9 - 1 + 1) + 1);
             if (box.isBoxEmpty(((byte) (rand - 1)))) {
@@ -45,8 +54,8 @@ public class Game {
         }
     }
 
-    private boolean playPCAndCheckIfWin() {
-        byte rnd = playPC();
+    private boolean makeComputerMoveAndCheckIfWin() {
+        byte rnd = generateComputerMove();
         box.fillBox((byte) (rnd - 1), 'O');
         return box.checkFinalCombination('O');
 
@@ -66,7 +75,7 @@ public class Game {
             return WINRESULT.WON;
         } else if (checkDraw()) {
             return WINRESULT.DRAW;
-        } else if (playPCAndCheckIfWin()) {
+        } else if (makeComputerMoveAndCheckIfWin()) {
             return WINRESULT.LOST;
         }
         return WINRESULT.GOING;

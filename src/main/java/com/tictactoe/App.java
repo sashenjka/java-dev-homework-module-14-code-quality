@@ -1,5 +1,7 @@
 package com.tictactoe;
 
+import static com.tictactoe.Game.scan;
+
 public class App {
 
     private static void printStartInfo() {
@@ -16,6 +18,7 @@ public class App {
 
         Game game = new Game();
         game.play();
+        scan.close();
     }
 }
 
